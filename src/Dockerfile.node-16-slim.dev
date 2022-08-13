@@ -2,6 +2,7 @@ FROM node:16-slim
 
 ARG USERNAME=node
 ARG GROUP=1000
+ARG ROOT_PASS=root
 
 RUN apt-get update && apt-get install -y \
   git \
@@ -21,5 +22,7 @@ RUN chmod +x \
   /scripts/create-env-example.sh \
   /home/$USERNAME/.bashrc \
   /home/$USERNAME/.inputrc
+
+RUN passwd $ROOT_PASS
 
 USER $USERNAME
