@@ -33,9 +33,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ..
-          tags: |
-            utkusarioglu/node-17-slim-devcontainer:latest
-            utkusarioglu/node-17-slim-devcontainer:1.0.0
+          tags: utkusarioglu/node-devcontainer:17-slim.0.0
           file: src/Dockerfile.node-17-slim.dev
           push: ${{ github.ref == 'refs/heads/main' }}
           cache-from: type=local,src=/tmp/.buildx-cache
