@@ -23,6 +23,6 @@ RUN chmod +x \
   /home/$USERNAME/.bashrc \
   /home/$USERNAME/.inputrc
 
-RUN passwd $ROOT_PASS
+RUN echo $ROOT_PASS | passwd root --stdin
 
 USER $USERNAME
