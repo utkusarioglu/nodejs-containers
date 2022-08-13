@@ -25,4 +25,4 @@ jobs:
           dockerfile: ${{ matrix.images.dockerfile }}
           containerName: ${{ matrix.images.containerName }}
           containerTag: ${{ matrix.images.containerTag }}
-        secrets: inherit
+        # secrets: inherit
