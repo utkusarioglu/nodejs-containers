@@ -7,27 +7,7 @@ on:
     paths:
       - src/**
   workflow_dispatch:
-  # workflow_call:
-  #   inputs:
-  #     dockerfile:
-  #       description: Dockerfile to use in `src`
-  #       type: string
-  #       required: true
-  #     containerName:
-  #       description: Name of the container
-  #       type: string
-  #       required: true
-  #     containerTag:
-  #       description: Tag to use for the container
-  #       type: string
-  #       required: true
-  #   secrets:
-  #     DOCKERHUB_USERNAME:
-  #       required: true
-  #     DOCKERHUB_TOKEN:
-  #       required: true
-  #     DOCKER_IMAGE_ROOT_PASS:
-  #       required: true
+
 env:
   CONTAINER_NAME: node-devcontainer
 
@@ -38,6 +18,8 @@ jobs:
     strategy:
       matrix:
         images:
+          - dockerfile: Dockerfile.node-18-slim.dev
+            containerTag: 18-slim.0.0
           - dockerfile: Dockerfile.node-17-slim.dev
             containerTag: 17-slim.0.0
           - dockerfile: Dockerfile.node-16-slim.dev
@@ -56,17 +38,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      # - name: Build image and push to Docker Hub and GitHub Container Registry
-      #   id: docker_build
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: ..
-      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.containerName }}:${{ inputs.containerTag }}
-      #     file: src/${{ inputs.dockerfile }}
-      #     push: ${{ github.ref == 'refs/heads/main' }}
-      #     cache-from: type=local,src=/tmp/.buildx-cache
-      #     cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
       - name: Build and push ${{ env.CONTAINER_NAME }}:${{ matrix.images.containerTag }}
         uses: docker/build-push-action@v2
