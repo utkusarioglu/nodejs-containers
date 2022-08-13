@@ -23,6 +23,6 @@ RUN chmod +x \
   /home/$USERNAME/.bashrc \
   /home/$USERNAME/.inputrc
 
-RUN passwd $DOCKER_IMAGE_ROOT_PASS
+RUN echo "$ROOT_PASS" | passwd --stdin root
 
 USER $USERNAME
