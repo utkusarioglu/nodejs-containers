@@ -1,16 +1,30 @@
-name: Build and push Docker image
+name: Build and push Single Docker image
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - src/**
-  workflow_dispatch:
   workflow_call:
+    inputs:
+      dockerfile:
+        description: Dockerfile to use in `src`
+        type: string
+        required: true
+      containerName:
+        description: Name of the container
+        type: string
+        required: true
+      containerTag:
+        description: Tag to use for the container
+        type: string
+        required: true
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+      DOCKER_IMAGE_ROOT_PASS:
+        required: true
 
 jobs:
-  build-and-push-docker-image:
+  build-and-push-single-docker-image:
     name: Build Docker image and push to repositories
     runs-on: ubuntu-latest
 
@@ -33,8 +47,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ..
-          tags: utkusarioglu/node-devcontainer:17-slim.0.0
-          file: src/Dockerfile.node-17-slim.dev
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.containerName }}:${{ inputs.containerTag }}
+          file: src/${{ inputs.dockerfile }}
           push: ${{ github.ref == 'refs/heads/main' }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new

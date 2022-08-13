@@ -1,0 +1,28 @@
+name: Build and push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - src/**
+  workflow_run:
+
+jobs:
+  build-and-push-docker-images:
+    name: Build and push multiple docker images
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        images:
+          - dockerfile: Dockerfile.node-17-slim.dev
+            containerName: node-devcontainer
+            containerTag: 17-slim.0.0
+    steps:
+      - name: Create node 17-slim image
+        uses: .github/workflows/build-and-push-single-docker-image.yml
+        with:
+          dockerfile: ${{ matrix.images.dockerfile }}
+          containerName: ${{ matrix.images.containerName }}
+          containerTag: ${{ matrix.images.containerTag }}
+        secrets: inherit
