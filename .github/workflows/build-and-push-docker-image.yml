@@ -34,9 +34,9 @@ jobs:
         with:
           context: ..
           tags: |
-            utkusarioglu/nodejs-17-slim-devcontainer:latest
-            utkusarioglu/nodejs-17-slim-devcontainer:1.0.0
-          file: src/Dockerfile.nodejs-17-slim.dev
+            utkusarioglu/node-17-slim-devcontainer:latest
+            utkusarioglu/node-17-slim-devcontainer:1.0.0
+          file: src/Dockerfile.node-17-slim.dev
           push: ${{ github.ref == 'refs/heads/main' }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
