@@ -1,4 +1,4 @@
-name: Build and push Docker Images
+name: Build and push Docker images
 
 on:
   push:
@@ -7,11 +7,32 @@ on:
     paths:
       - src/**
   workflow_dispatch:
+  # workflow_call:
+  #   inputs:
+  #     dockerfile:
+  #       description: Dockerfile to use in `src`
+  #       type: string
+  #       required: true
+  #     containerName:
+  #       description: Name of the container
+  #       type: string
+  #       required: true
+  #     containerTag:
+  #       description: Tag to use for the container
+  #       type: string
+  #       required: true
+  #   secrets:
+  #     DOCKERHUB_USERNAME:
+  #       required: true
+  #     DOCKERHUB_TOKEN:
+  #       required: true
+  #     DOCKER_IMAGE_ROOT_PASS:
+  #       required: true
 
 jobs:
   build-and-push-docker-images:
-    name: Build and push multiple docker images
-    runs-on: ubuntu-22.04
+    name: Build Docker image and push to repositories
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         images:
@@ -23,10 +44,42 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Create node 17-slim image
-        uses: ./.github/workflows/build-and-push-single-docker-image.yml
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
         with:
-          dockerfile: ${{ matrix.images.dockerfile }}
-          containerName: ${{ matrix.images.containerName }}
-          containerTag: ${{ matrix.images.containerTag }}
-        # secrets: inherit
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # - name: Build image and push to Docker Hub and GitHub Container Registry
+      #   id: docker_build
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ..
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.containerName }}:${{ inputs.containerTag }}
+      #     file: src/${{ inputs.dockerfile }}
+      #     push: ${{ github.ref == 'refs/heads/main' }}
+      #     cache-from: type=local,src=/tmp/.buildx-cache
+      #     cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+
+      - name: Build and push ${{ matrix.images.containerName}}:${{ matrix.images.containerTag }}
+        uses: docker/build-push-action@v2
+        id: docker_build
+        with:
+          context: ..
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.images.containerName }}:${{ matrix.images.containerTag }}
+          file: src/${{ matrix.images.dockerfile }}
+          push: ${{ github.ref == 'refs/heads/main' }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
