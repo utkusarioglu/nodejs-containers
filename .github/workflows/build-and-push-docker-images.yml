@@ -20,7 +20,7 @@ jobs:
             containerTag: 17-slim.0.0
     steps:
       - name: Create node 17-slim image
-        uses: .github/workflows/build-and-push-single-docker-image.yml
+        uses: ./.github/workflows/build-and-push-single-docker-image.yml
         with:
           dockerfile: ${{ matrix.images.dockerfile }}
           containerName: ${{ matrix.images.containerName }}
