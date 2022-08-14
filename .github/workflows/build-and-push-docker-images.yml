@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v2
         id: docker_build
         with:
-          context: ..
+          context: .
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}:${{ matrix.images.containerTag }}
           file: ${{ matrix.images.dockerfile }}
           push: ${{ github.ref == 'refs/heads/main' }}
