@@ -18,11 +18,11 @@ jobs:
     strategy:
       matrix:
         images:
-          - dockerfile: Dockerfile.node-18-slim.dev
+          - dockerfile: src/Dockerfile.node-18-slim.dev
             containerTag: 18-slim.0.0
-          - dockerfile: Dockerfile.node-17-slim.dev
+          - dockerfile: src/Dockerfile.node-17-slim.dev
             containerTag: 17-slim.0.0
-          - dockerfile: Dockerfile.node-16-slim.dev
+          - dockerfile: src/Dockerfile.node-16-slim.dev
             containerTag: 16-slim.0.0
 
     steps:
@@ -45,7 +45,7 @@ jobs:
         with:
           context: ..
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}:${{ matrix.images.containerTag }}
-          file: src/${{ matrix.images.dockerfile }}
+          file: ${{ matrix.images.dockerfile }}
           push: ${{ github.ref == 'refs/heads/main' }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
