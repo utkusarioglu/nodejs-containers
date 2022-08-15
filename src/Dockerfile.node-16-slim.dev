@@ -4,7 +4,7 @@ ARG USERNAME=node
 ARG GROUP=1000
 ARG ROOT_PASS=root
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
   git \
   vim
 
