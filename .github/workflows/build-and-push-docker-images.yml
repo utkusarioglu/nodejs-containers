@@ -62,22 +62,23 @@ jobs:
           else
             echo "::set-output name=run-docker-build::false"
             echo "::debug::Docker build is cancelled as none of the watched files changed."
+            echo "Docker build is cancelled as none of the watched files changed."
           fi
 
       - name: Set up Docker Buildx
-        if: steps.run-state.run-docker-build == 'true'
+        if: steps.run-state.outputs.run-docker-build == 'true'
         id: buildx
         uses: docker/setup-buildx-action@v1
 
       - name: Login to DockerHub
-        if: steps.run-state.run-docker-build == 'true'
+        if: steps.run-state.outputs.run-docker-build == 'true'
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push ${{ env.CONTAINER_NAME }}:${{ matrix.images.containerTag }}
-        if: steps.run-state.run-docker-build == 'true'
+        if: steps.run-state.outputs.run-docker-build == 'true'
         uses: docker/build-push-action@v2
         id: docker_build
         with:
@@ -94,11 +95,11 @@ jobs:
             GROUP=${{ env.CONTAINER_GROUP }}
 
       - name: Image digest
-        if: steps.run-state.run-docker-build == 'true'
+        if: steps.run-state.outputs.run-docker-build == 'true'
         run: echo ${{ steps.docker_build.outputs.digest }}
 
       - name: Set Docker Hub description
-        if: steps.run-state.run-docker-build == 'true'
+        if: steps.run-state.outputs.run-docker-build == 'true'
         uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
