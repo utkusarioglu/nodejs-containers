@@ -10,6 +10,8 @@ on:
 
 env:
   CONTAINER_NAME: node-devcontainer
+  CACHE_TO_DEST: /tmp/.buildx-cache-new
+  CACHE_FROM_SRC: /tmp/.buildx-cache
 
 jobs:
   build-and-push-docker-images:
@@ -74,8 +76,8 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}:${{ matrix.images.containerTag }}
           file: ${{ matrix.images.dockerfile }}
           push: ${{ github.ref == 'refs/heads/main' }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+          cache-from: type=local,src=${{ env.CACHE_FROM_SRC }}
+          cache-to: type=local,mode=max,dest=${{ env.CACHE_TO_DEST }}
           build-args: |
             ROOT_PASS=${{ secrets.DOCKER_IMAGE_ROOT_PASS }}
 
@@ -95,5 +97,8 @@ jobs:
 
       - name: Move cache
         run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          rm -rf ${{ env.CACHE_FROM_SRC }}
+          if [ -d ${{ env.CACHE_FROM_SRC }} ];
+          then
+            mv ${{ env.CACHE_TO_DEST }} ${{ env.CACHE_FROM_SRC }}
+          fi
