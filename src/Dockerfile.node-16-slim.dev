@@ -1,12 +1,16 @@
 FROM node:16-slim
 
-ARG USERNAME=node
-ARG GROUP=1000
-ARG ROOT_PASS=root
+ARG USERNAME=
+ARG GROUP=
+ARG ROOT_PASS=
+
+RUN echo "root:$ROOT_PASS" | chpasswd
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
   git \
   vim
+
+USER $USERNAME
 
 # Gists
 ADD --chown=$USERNAME:$GROUP \
@@ -22,7 +26,3 @@ RUN chmod +x \
   /scripts/create-env-example.sh \
   /home/$USERNAME/.bashrc \
   /home/$USERNAME/.inputrc
-
-RUN echo "root:$ROOT_PASS" | chpasswd
-
-USER $USERNAME
