@@ -7,7 +7,7 @@ ARG ROOT_PASS
 
 RUN echo "root:$ROOT_PASS" | chpasswd
 
-RUN for arg in BASE_IMAGE ROOT_PASS USERNAME GROUP; \
+RUN for arg in ROOT_PASS USERNAME GROUP; \
   do \
   [ ! -z "${arg}" ] || { echo "ARG \"$arg\" needs to be set"; exit 1; } \
   done;
