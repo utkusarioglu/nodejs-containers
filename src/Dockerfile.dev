@@ -10,12 +10,12 @@ RUN for arg in BASE_IMAGE ROOT_PASS USERNAME GROUP; \
   [ ! -z "${arg}" ] || { echo "ARG \"$arg\" needs to be set"; exit 1; } \
   done;
 
-RUN echo "root:$ROOT_PASS" | chpasswd
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
   git \
   vim
 
+RUN echo "root:$ROOT_PASS" | chpasswd
 USER $USERNAME
 
 # Gists
