@@ -20,26 +20,50 @@ jobs:
         images:
           - dockerfile: src/Dockerfile.node-18-slim.dev
             containerTag: 18-slim.0.0
+            additionalFilesToWatch: ""
           - dockerfile: src/Dockerfile.node-17-slim.dev
             containerTag: 17-slim.0.0
+            additionalFilesToWatch: ""
           - dockerfile: src/Dockerfile.node-16-slim.dev
             containerTag: 16-slim.0.0
+            additionalFilesToWatch: ""
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v25
+        with:
+          files: |
+            ${{ matrix.images.dockerfile }}
+            ${{ matrix.images.readmeFile }}
+            ${{ matrix.images.additionalFilesToWatch }}
+
+      - name: Declare run state
+        run: |
+          if [ ${{ steps.changed-files.outputs.any_modified }} == true ];
+          then
+            echo "Docker build will carry out as expected."
+          else
+            echo "Docker build is cancelled as none of the watched files changed."
+          fi
+
       - name: Set up Docker Buildx
+        if: steps.changed-files.outputs.any_modified == 'true'
         id: buildx
         uses: docker/setup-buildx-action@v1
 
       - name: Login to DockerHub
+        if: steps.changed-files.outputs.any_modified == 'true'
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push ${{ env.CONTAINER_NAME }}:${{ matrix.images.containerTag }}
+        if: steps.changed-files.outputs.any_modified == 'true'
         uses: docker/build-push-action@v2
         id: docker_build
         with:
@@ -53,9 +77,11 @@ jobs:
             ROOT_PASS=${{ secrets.DOCKER_IMAGE_ROOT_PASS }}
 
       - name: Image digest
+        if: steps.changed-files.outputs.any_modified == 'true'
         run: echo ${{ steps.docker_build.outputs.digest }}
 
       - name: Set Docker Hub description
+        if: steps.changed-files.outputs.any_modified == 'true'
         uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
