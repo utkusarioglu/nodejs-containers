@@ -21,12 +21,15 @@ jobs:
           - dockerfile: src/Dockerfile.node-18-slim.dev
             containerTag: 18-slim.0.0
             additionalFilesToWatch: ""
+            readmeFile: src/DOCKER_README.md
           - dockerfile: src/Dockerfile.node-17-slim.dev
             containerTag: 17-slim.0.0
             additionalFilesToWatch: ""
+            readmeFile: src/DOCKER_README.md
           - dockerfile: src/Dockerfile.node-16-slim.dev
             containerTag: 16-slim.0.0
             additionalFilesToWatch: ""
+            readmeFile: src/DOCKER_README.md
 
     steps:
       - name: Checkout code
@@ -88,7 +91,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}
           short-description: NodeJS devcontainers
-          readme-filepath: src/DOCKER_README.md
+          readme-filepath: ${{ matrix.images.readmeFile }}
 
       - name: Move cache
         run: |
