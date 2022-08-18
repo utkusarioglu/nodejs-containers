@@ -22,15 +22,18 @@ jobs:
     strategy:
       matrix:
         images:
-          - dockerfile: src/Dockerfile.node-18-slim.dev
+          - baseImage: node:18-slim
+            dockerfile: src/Dockerfile.dev
             containerTag: 18-slim.0.0
             additionalFilesToWatch: ""
             readmeFile: src/DOCKER_README.md
-          - dockerfile: src/Dockerfile.node-17-slim.dev
+          - baseImage: node:17-slim
+            dockerfile: src/Dockerfile.dev
             containerTag: 17-slim.0.0
             additionalFilesToWatch: ""
             readmeFile: src/DOCKER_README.md
-          - dockerfile: src/Dockerfile.node-16-slim.dev
+          - baseImage: node:16-slim
+            dockerfile: src/Dockerfile.dev
             containerTag: 16-slim.0.0
             additionalFilesToWatch: ""
             readmeFile: src/DOCKER_README.md
@@ -81,6 +84,7 @@ jobs:
           cache-from: type=local,src=${{ env.CACHE_FROM_SRC }}
           cache-to: type=local,mode=max,dest=${{ env.CACHE_TO_DEST }}
           build-args: |
+            BASE_IMAGE=${{ matrix.images.baseImage }}
             ROOT_PASS=${{ secrets.DOCKER_IMAGE_ROOT_PASS }}
             USERNAME=${{ env.CONTAINER_USERNAME }}
             GROUP=${{ env.CONTAINER_GROUP }}
