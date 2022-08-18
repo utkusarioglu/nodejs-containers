@@ -55,6 +55,15 @@ jobs:
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
+      - name: Set Docker Hub description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}
+          short-description: NodeJS devcontainers
+          readme-filepath: src/DOCKER_README.md
+
       - name: Move cache
         run: |
           rm -rf /tmp/.buildx-cache
