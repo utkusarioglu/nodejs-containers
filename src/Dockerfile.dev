@@ -1,10 +1,11 @@
 ARG BASE_IMAGE=node
-
 FROM $BASE_IMAGE
 
 ARG USERNAME
 ARG GROUP
 ARG ROOT_PASS
+
+RUN echo "root:$ROOT_PASS" | chpasswd
 
 RUN for arg in BASE_IMAGE ROOT_PASS USERNAME GROUP; \
   do \
@@ -16,7 +17,6 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
   git \
   vim
 
-RUN echo "root:$ROOT_PASS" | chpasswd
 USER $USERNAME
 
 # Gists
