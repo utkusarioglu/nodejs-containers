@@ -11,5 +11,4 @@ Devcontainers to develop with NodeJS
 
 ## Using env example creator
 
-The file resides in `/scripts`. Run the file in your desired path 
-for it to find and create examples for `.env` and `.env.*` files.
+The file resides in `/scripts`. Run the file in your desired path for it to find and create examples for `.env` and `.env.*` files. You will get the best results with this script if you include it among your on save hooks.
