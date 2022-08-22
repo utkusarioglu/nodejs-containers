@@ -45,7 +45,7 @@ jobs:
           fetch-depth: 2
 
       - name: Get changed files
-        id: changed-files
+        id: changed_files
         uses: tj-actions/changed-files@v25
         with:
           files: |
@@ -54,33 +54,33 @@ jobs:
             ${{ matrix.images.additionalFilesToWatch }}
 
       - name: Declare run state
-        id: run-state
+        id: run_state
         run: |
-          if [ ${{ steps.changed-files.outputs.any_modified }} == true ] || \
+          if [ ${{ steps.changed_files.outputs.any_modified }} == true ] || \
             [ ${{ github.event_name }} == workflow_dispatch ];
           then
-            echo "::set-output name=run-docker-build::true"
+            echo "::set-output name=run_docker_build::true"
             echo "::debug::Docker build will carry out as expected."
           else
-            echo "::set-output name=run-docker-build::false"
+            echo "::set-output name=run_docker_build::false"
             echo "::debug::Docker build is cancelled as none of the watched files have been changed."
             echo "Docker build is cancelled as none of the watched files have been changed."
           fi
 
       - name: Set up Docker Buildx
-        if: steps.run-state.outputs.run-docker-build == 'true'
+        if: steps.run_state.outputs.run_docker_build == 'true'
         id: buildx
         uses: docker/setup-buildx-action@v1
 
       - name: Login to DockerHub
-        if: steps.run-state.outputs.run-docker-build == 'true'
+        if: steps.run_state.outputs.run_docker_build == 'true'
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push ${{ env.CONTAINER_NAME }}:${{ matrix.images.containerTag }}
-        if: steps.run-state.outputs.run-docker-build == 'true'
+        if: steps.run_state.outputs.run_docker_build == 'true'
         uses: docker/build-push-action@v2
         id: docker_build
         with:
@@ -97,11 +97,11 @@ jobs:
             GROUP=${{ env.CONTAINER_GROUP }}
 
       - name: Image digest
-        if: steps.run-state.outputs.run-docker-build == 'true'
+        if: steps.run_state.outputs.run_docker_build == 'true'
         run: echo ${{ steps.docker_build.outputs.digest }}
 
       - name: Set Docker Hub description
-        if: steps.run-state.outputs.run-docker-build == 'true'
+        if: steps.run_state.outputs.run_docker_build == 'true'
         uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
