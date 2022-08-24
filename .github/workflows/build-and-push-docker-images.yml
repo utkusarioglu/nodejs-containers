@@ -26,7 +26,6 @@ jobs:
         images:
           - baseImage: node:18-slim
             dockerfile: src/Dockerfile.dev
-            # containerTag: 18-slim.0.0
             nodeTag: 18-slim
             additionalFilesToWatch: ""
             readmeFile: src/DOCKER_README.md
