@@ -89,6 +89,9 @@ jobs:
         with:
           fallback: not-found
 
+      - name: Show latest tag
+        run: echo ${{ steps.latest_tag.outputs.tag }}
+
       - name: Build and push ${{ env.CONTAINER_NAME }}:${{ matrix.images.nodeTag }}
         if: steps.run_state.outputs.run_docker_build == 'true'
         uses: docker/build-push-action@v2
