@@ -83,6 +83,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Get latest tag
+        if: steps.run_state.outputs.run_docker_build == 'true'
         id: latest_tag
         uses: "WyriHaximus/github-action-get-previous-tag@v1"
         with:
@@ -94,7 +95,7 @@ jobs:
         id: docker_build
         with:
           context: .
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}:${{ matrix.images.containerTag }}-${{ latest_tag.outputs.tag }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}:${{ matrix.images.containerTag }}-${{ steps.latest_tag.outputs.tag }}
           file: ${{ matrix.images.dockerfile }}
           push: ${{ github.ref == 'refs/heads/main' }}
           cache-from: type=local,src=${{ env.CACHE_FROM_SRC }}
