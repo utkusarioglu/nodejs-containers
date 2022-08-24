@@ -83,7 +83,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Get latest tag
-        if: steps.run_state.outputs.run_docker_build == 'true'
+        # if: steps.run_state.outputs.run_docker_build == 'true'
         id: latest_tag
         uses: "WyriHaximus/github-action-get-previous-tag@v1"
         with:
