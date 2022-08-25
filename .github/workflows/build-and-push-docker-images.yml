@@ -25,15 +25,15 @@ jobs:
     strategy:
       matrix:
         images:
-          - nodeTag: 18-slim
+          - imageTag: 18-slim
             dockerfile: src/Dockerfile.dev
             additionalFilesToWatch: ""
             readmeFile: src/DOCKER_README.md
-          - nodeTag: 17-slim
+          - imageTag: 17-slim
             dockerfile: src/Dockerfile.dev
             additionalFilesToWatch: ""
             readmeFile: src/DOCKER_README.md
-          - nodeTag: 16-slim
+          - imageTag: 16-slim
             dockerfile: src/Dockerfile.dev
             additionalFilesToWatch: ""
             readmeFile: src/DOCKER_README.md
@@ -85,19 +85,19 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push ${{ env.CONTAINER_NAME }}:${{ matrix.images.nodeTag }}
+      - name: Build and push ${{ env.CONTAINER_NAME }}:${{ matrix.images.imageTag }}
         if: steps.run_state.outputs.run_docker_build == 'true'
         uses: docker/build-push-action@v2
         id: docker_build
         with:
           context: .
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}:${{ matrix.images.containerTag }}-${{ steps.latest_tag.outputs.tag }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}:${{ matrix.images.imageTag }}-${{ steps.latest_tag.outputs.tag }}
           file: ${{ matrix.images.dockerfile }}
           push: ${{ github.ref == 'refs/heads/main' }}
           cache-from: type=local,src=${{ env.CACHE_FROM_SRC }}
           cache-to: type=local,mode=max,dest=${{ env.CACHE_TO_DEST }}
           build-args: |
-            NODE_TAG=${{ matrix.images.nodeTag }}
+            IMAGE_TAG=${{ matrix.images.imageTag }}
             ROOT_PASS=${{ secrets.DOCKER_IMAGE_ROOT_PASS }}
             USERNAME=${{ env.CONTAINER_USERNAME }}
             GROUP=${{ env.CONTAINER_GROUP }}
