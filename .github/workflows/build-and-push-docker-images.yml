@@ -3,8 +3,9 @@ name: Build and push Docker images
 on:
   push:
     branches:
-      - main
-      - feature/tag
+      - feature/*
+    tags:
+      - "*"
     paths:
       - src/**
       - .github/workflows/build-and-push-docker-images.yml
@@ -24,19 +25,16 @@ jobs:
     strategy:
       matrix:
         images:
-          - baseImage: node:18-slim
+          - nodeTag: 18-slim
             dockerfile: src/Dockerfile.dev
-            nodeTag: 18-slim
             additionalFilesToWatch: ""
             readmeFile: src/DOCKER_README.md
-          # - baseImage: node:17-slim
+          # - nodeTag: 17-slim
           #   dockerfile: src/Dockerfile.dev
-          #   containerTag: 17-slim.0.0
           #   additionalFilesToWatch: ""
           #   readmeFile: src/DOCKER_README.md
-          # - baseImage: node:16-slim
+          # - nodeTag: 16-slim
           #   dockerfile: src/Dockerfile.dev
-          #   containerTag: 16-slim.0.0
           #   additionalFilesToWatch: ""
           #   readmeFile: src/DOCKER_README.md
 
@@ -84,7 +82,7 @@ jobs:
       - name: Get latest tag
         # if: steps.run_state.outputs.run_docker_build == 'true'
         id: latest_tag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        uses: WyriHaximus/github-action-get-previous-tag@v1
         with:
           fallback: not-found
 
