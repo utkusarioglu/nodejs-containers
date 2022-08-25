@@ -54,7 +54,6 @@ jobs:
             ${{ matrix.images.additionalFilesToWatch }}
 
       - name: Get latest tag
-        # if: steps.run_state.outputs.run_docker_build == 'true'
         id: latest_tag
         uses: WyriHaximus/github-action-get-previous-tag@v1
         with:
@@ -85,9 +84,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Show latest tag
-        run: echo ${{ steps.latest_tag.outputs.tag }}
 
       - name: Build and push ${{ env.CONTAINER_NAME }}:${{ matrix.images.nodeTag }}
         if: steps.run_state.outputs.run_docker_build == 'true'
