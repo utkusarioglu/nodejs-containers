@@ -52,6 +52,7 @@ jobs:
             ${{ matrix.images.dockerfile }}
             ${{ matrix.images.readmeFile }}
             ${{ matrix.images.additionalFilesToWatch }}
+            .github/workflows/build-and-push.yml
 
       - name: Get latest tag
         id: latest_tag
@@ -73,6 +74,28 @@ jobs:
             echo "Docker build is cancelled as the required conditions for a run haven't been met"
           fi
 
+      - name: Create variables
+        id: variables
+        run: |
+          image_name=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}
+          image_tag=${{ matrix.images.imageTag }}.${{ steps.latest_tag.outputs.tag }}
+          dev_image_tag="${image_tag}-dev"
+          image_ref="${image_name}:${image_tag}"
+          short_image_ref="${{ env.CONTAINER_NAME }}:${image_tag}"
+          dev_image_ref="$image_name:$dev_image_tag"
+          short_dev_image_ref="${{ env.CONTAINER_NAME }}:$dev_image_tag"
+
+          echo "::set-output name=image-name::$image_name"
+
+          echo "::set-output name=image-tag::$image_tag"
+          echo "::set-output name=dev-image-tag::$dev_image_tag"
+
+          echo "::set-output name=image-ref::$image_ref"
+          echo "::set-output name=short-image-ref::$short_image_ref"
+
+          echo "::set-output name=dev-image-ref::$dev_image_ref"
+          echo "::set-output name=short-dev-image-ref::$short_dev_image_ref"
+
       - name: Set up Docker Buildx
         if: steps.run_state.outputs.run_docker_build == 'true'
         id: buildx
@@ -85,15 +108,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push ${{ env.CONTAINER_NAME }}:${{ matrix.images.imageTag }}
+      - name: Build ${{ steps.variables.outputs.short-image-ref }}
         if: steps.run_state.outputs.run_docker_build == 'true'
         uses: docker/build-push-action@v2
         id: docker_build
         with:
           context: .
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}:${{ matrix.images.imageTag }}-${{ steps.latest_tag.outputs.tag }}
+          tags: ${{ steps.variables.outputs.image-ref }}
           file: ${{ matrix.images.dockerfile }}
-          push: ${{ github.ref == 'refs/heads/main' }}
+          push: true
+          pull: false
           cache-from: type=local,src=${{ env.CACHE_FROM_SRC }}
           cache-to: type=local,mode=max,dest=${{ env.CACHE_TO_DEST }}
           build-args: |
@@ -102,9 +126,27 @@ jobs:
             USERNAME=${{ env.CONTAINER_USERNAME }}
             GROUP=${{ env.CONTAINER_GROUP }}
 
-      - name: Image digest
+      - name: Build devcontainer ${{ steps.variables.outputs.short-dev-image-ref }}
         if: steps.run_state.outputs.run_docker_build == 'true'
-        run: echo ${{ steps.docker_build.outputs.digest }}
+        id: devcontainer_build
+        uses: devcontainers/ci@v0.2
+        env:
+          IMAGE_NAME: ${{ steps.variables.outputs.image-name }}
+          IMAGE_TAG: ${{ steps.variables.outputs.image-tag }}
+        with:
+          imageName: ${{ steps.variables.outputs.image-name }}
+          imageTag: ${{ steps.variables.outputs.image-tag }}
+          subFolder: src
+          runCmd: |-
+            gh --version
+            node --version
+            node <<EOF
+            console.log("Node runs as expected");
+            EOF
+
+      - name: Push devcontainer ${{ steps.variables.outputs.short-dev-image-ref }}
+        if: steps.run_state.outputs.run_docker_build == 'true'
+        run: docker push ${{ steps.variables.outputs.image-ref }}
 
       - name: Set Docker Hub description
         if: steps.run_state.outputs.run_docker_build == 'true'
@@ -112,7 +154,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}
+          repository: ${{ steps.variables.outputs.image-name }}
           short-description: NodeJS devcontainers
           readme-filepath: ${{ matrix.images.readmeFile }}
 
