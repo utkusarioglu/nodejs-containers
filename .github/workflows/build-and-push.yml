@@ -2,10 +2,9 @@ name: build-and-push
 
 on:
   push:
-    # branches:
-    #   - feature/*
     tags:
-      - "*"
+      - "*.*.*"
+      - feature/*
     paths:
       - src/**
       - .github/workflows/build-and-push.yml
@@ -137,12 +136,7 @@ jobs:
           imageName: ${{ steps.variables.outputs.image-name }}
           imageTag: ${{ steps.variables.outputs.image-tag }}
           subFolder: src
-          runCmd: |-
-            gh --version
-            node --version
-            node <<EOF
-            console.log("Node runs as expected");
-            EOF
+          runCmd: /scripts/devcontainer-check.sh
 
       - name: Push devcontainer ${{ steps.variables.outputs.short-dev-image-ref }}
         if: steps.run_state.outputs.run_docker_build == 'true'
