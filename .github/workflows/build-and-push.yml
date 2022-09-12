@@ -3,8 +3,8 @@ name: build-and-push
 on:
   push:
     tags:
-      - "*.*.*"
-      - feature/*
+      - "**.**.**"
+      - feature/**
     paths:
       - src/**
       - .github/workflows/build-and-push.yml
