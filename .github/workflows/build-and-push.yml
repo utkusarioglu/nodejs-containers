@@ -2,10 +2,9 @@ name: build-and-push
 
 on:
   push:
-    # branches:
-    #   - feature/*
     tags:
-      - "*"
+      - "**.**.**"
+      - feature/**
     paths:
       - src/**
       - .github/workflows/build-and-push.yml
@@ -74,11 +73,12 @@ jobs:
             echo "Docker build is cancelled as the required conditions for a run haven't been met"
           fi
 
-      - name: Create variables
+      - name: Variables
         id: variables
         run: |
           image_name=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}
-          image_tag=${{ matrix.images.imageTag }}.${{ steps.latest_tag.outputs.tag }}
+          repo_tag=${{ steps.latest_tag.outputs.tag }}
+          image_tag=${repo_tag//\//-}
           dev_image_tag="${image_tag}-dev"
           image_ref="${image_name}:${image_tag}"
           short_image_ref="${{ env.CONTAINER_NAME }}:${image_tag}"
@@ -137,12 +137,7 @@ jobs:
           imageName: ${{ steps.variables.outputs.image-name }}
           imageTag: ${{ steps.variables.outputs.image-tag }}
           subFolder: src
-          runCmd: |-
-            gh --version
-            node --version
-            node <<EOF
-            console.log("Node runs as expected");
-            EOF
+          runCmd: /scripts/devcontainer-check.sh
 
       - name: Push devcontainer ${{ steps.variables.outputs.short-dev-image-ref }}
         if: steps.run_state.outputs.run_docker_build == 'true'
