@@ -33,4 +33,4 @@ RUN chmod +x \
   /home/$USERNAME/.bashrc \
   /home/$USERNAME/.inputrc
 
-COPY scripts/mounted /scripts
+COPY src/scripts /scripts
