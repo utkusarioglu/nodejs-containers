@@ -3,6 +3,7 @@ name: build-and-push
 on:
   push:
     tags:
+      - "*.*"
       - "**.**"
     branches:
       - experiment/**/**
