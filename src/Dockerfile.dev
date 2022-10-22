@@ -1,4 +1,4 @@
-ARG IMAGE_TAG=10
+ARG IMAGE_TAG=16
 FROM node:$IMAGE_TAG
 
 ARG USERNAME
@@ -14,7 +14,17 @@ RUN echo "root:$ROOT_PASS" | chpasswd
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
   git \
-  vim
+  wget \
+  libc6 \
+  libgcc-s1
+
+# Neovim requires manual retrieval of the latest version
+# as the apt package is quite old
+RUN wget https://github.com/neovim/neovim/releases/download/v0.8.0/nvim-linux64.deb \
+  -O /neovim.deb
+RUN apt install -y /neovim.deb 
+RUN rm /neovim.deb
+ENV EDITOR=nvim
 
 USER $USERNAME
 
