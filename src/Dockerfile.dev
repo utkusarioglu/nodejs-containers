@@ -4,6 +4,7 @@ FROM node:$IMAGE_TAG
 ARG USERNAME
 ARG GROUP
 ARG ROOT_PASS
+ARG HOME=/home/${USERNAME}
 
 RUN for arg in ROOT_PASS USERNAME GROUP; \
   do \
@@ -34,13 +35,16 @@ ADD --chown=$USERNAME:$GROUP \
   /scripts/create-env-example.sh
 ADD --chown=$USERNAME:$GROUP \
   https://gist.githubusercontent.com/utkusarioglu/3523b00578807d63b05399fe57a4b2a7/raw/.bashrc \
-  /home/$USERNAME/.bashrc
+  $HOME/.bashrc
 ADD --chown=$USERNAME:$GROUP \
   https://gist.githubusercontent.com/utkusarioglu/d5c216c744460c45bf6260d0de4131b4/raw/.inputrc \
-  /home/$USERNAME/.inputrc
+  $HOME/.inputrc
 RUN chmod +x \
   /scripts/create-env-example.sh \
-  /home/$USERNAME/.bashrc \
-  /home/$USERNAME/.inputrc
+  $HOME/.bashrc \
+  $HOME/.inputrc
 
 COPY src/scripts /scripts
+
+RUN mkdir -p $HOME/.vscode-server/extensions
+RUN mkdir -p $HOME/.vscode-server-insiders/extensions
