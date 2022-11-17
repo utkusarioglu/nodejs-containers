@@ -15,9 +15,10 @@ RUN echo "root:$ROOT_PASS" | chpasswd
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
   git \
-  wget \
+  jq \
   libc6 \
-  libgcc-s1
+  libgcc-s1 \
+  wget 
 
 # Neovim requires manual retrieval of the latest version
 # as the apt package is quite old

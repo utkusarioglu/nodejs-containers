@@ -1,6 +1,6 @@
 #!/bin/bash
 
-required_packages="gh node nvim git"
+required_packages="gh node nvim git jq"
 
 for exec in $required_packages;
 do
