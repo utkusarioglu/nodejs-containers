@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "**.**"
+      - "experiment/**/**/**"
     paths:
       - src/**
       - .github/workflows/build-and-push.yml
@@ -53,18 +54,12 @@ jobs:
             ${{ matrix.images.additionalFilesToWatch }}
             .github/workflows/build-and-push.yml
 
-      - name: Get latest tag
-        id: latest_tag
-        uses: WyriHaximus/github-action-get-previous-tag@v1
-        with:
-          fallback: ${{ env.TAG_FALLBACK_STRING }}
-
       - name: Declare run state
         id: run_state
         run: |
           if [ ${{ steps.changed_files.outputs.any_modified }} == true ] || \
             [ ${{ github.event_name }} == workflow_dispatch ] || \
-            [ ${{ steps.latest_tag.outputs.tag }} != ${{ env.TAG_FALLBACK_STRING }} ];
+            [ ${{ github.ref_type }} != tag ];
           then
             echo "::set-output name=run_docker_build::true"
             echo "::debug::Docker build will carry out as expected."
@@ -77,7 +72,7 @@ jobs:
         id: variables
         run: |
           image_name=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}
-          repo_tag=${{ steps.latest_tag.outputs.tag }}
+          repo_tag=${{ github.ref_name }}
           image_tag=${{ matrix.images.imageTag }}.${repo_tag//\//-}
           dev_image_tag="${image_tag}"
           image_ref="${image_name}:${image_tag}"
