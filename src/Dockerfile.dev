@@ -1,10 +1,13 @@
-ARG IMAGE_TAG=16
+ARG IMAGE_TAG=19
 FROM node:$IMAGE_TAG
 
 ARG USERNAME
 ARG GROUP
 ARG ROOT_PASS
-ARG HOME=/home/${USERNAME}
+ARG YQ_VERSION="v4.28.1"
+ARG NVIM_VERSION="v0.8.3"
+ARG HOME="/home/${USERNAME}"
+ARG ELAM_ABSPATH="$HOME/elam"
 
 RUN for arg in ROOT_PASS USERNAME GROUP; \
   do \
@@ -18,11 +21,18 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
   jq \
   libc6 \
   libgcc-s1 \
+  htop \
   wget 
+
+# Yq requires manual retrieval of the package
+RUN wget \
+  https://github.com/mikefarah/yq/releases/download/$YQ_VERSION/yq_linux_amd64 \
+  -O /usr/bin/yq && \
+  chmod +x /usr/bin/yq
 
 # Neovim requires manual retrieval of the latest version
 # as the apt package is quite old
-RUN wget https://github.com/neovim/neovim/releases/download/v0.8.0/nvim-linux64.deb \
+RUN wget https://github.com/neovim/neovim/releases/download/$NVIM_VERSION/nvim-linux64.deb \
   -O /neovim.deb
 RUN apt install -y /neovim.deb 
 RUN rm /neovim.deb
@@ -44,6 +54,10 @@ RUN chmod +x \
   /scripts/create-env-example.sh \
   $HOME/.bashrc \
   $HOME/.inputrc
+
+# Elam
+RUN git clone https://github.com/utkusarioglu/elam.git $ELAM_ABSPATH
+RUN echo "alias elam=$ELAM_ABSPATH/elam.sh" >> $HOME/.bash_aliases
 
 COPY src/scripts /scripts
 
