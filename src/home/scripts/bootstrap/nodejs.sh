@@ -10,7 +10,7 @@ node_file=nodesource_setup.sh
 wget -O ${node_file} https://deb.nodesource.com/setup_23.x
 chmod +x ${node_file}
 ./${node_file}
-# curl -sL https://deb.nodesource.com/setup_220.x | bash - 
+rm -rf ${node_file}
 
 apt-get install -y nodejs
 
