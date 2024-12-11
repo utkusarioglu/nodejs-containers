@@ -43,13 +43,19 @@ ARG BASH_TAG
 
 FROM utkusarioglu/bash-devcontainer:${BASH_TAG}
 
+WORKDIR ${HOME}
+
+COPY home/scripts/* scripts/
+
 USER root
 
-RUN apt update && apt upgrade && apt install -y nodejs
+RUN scripts/bootstap/nodejs.sh
+
+# RUN apt update && apt upgrade && apt install -y nodejs
 
 # Needed for yarn
-RUN corepack enable yarn 
-RUN yarn set version stable
+# RUN corepack enable yarn 
+# RUN yarn set version stable
 
 
 # USER $USERNAME
