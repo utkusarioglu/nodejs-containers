@@ -50,8 +50,8 @@ WORKDIR ${HOME}
 USER root
 
 COPY home/scripts scripts/
-RUN ls -alR ${HOME}
 RUN chown -R 1000:1000 ${HOME}
+RUN ls -alR ${HOME}
 
 RUN scripts/bootstrap/nodejs.sh
 
