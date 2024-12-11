@@ -1,7 +1,7 @@
 Name: Push
 
 on:
-  push:
+  push
 
 jobs:
   push:
