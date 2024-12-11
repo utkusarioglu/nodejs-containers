@@ -47,11 +47,11 @@ ARG HOME=/home/dev
 
 WORKDIR ${HOME}
 
+USER root
+
 COPY home/scripts/* scripts/
 RUN ls -alR ${HOME}
 RUN chown -R 1000:1000 ${HOME}
-
-USER root
 
 RUN scripts/bootstrap/nodejs.sh
 
