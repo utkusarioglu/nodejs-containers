@@ -1,6 +1,6 @@
 ARG BASE_IMAGE
 
-FROM utkusarioglu/${BASE_IMAGE}
+FROM utkusarioglu/${BASE_IMAGE}:${BASE_TAG}
 
 ARG NODE_VERSION
 
