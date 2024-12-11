@@ -28,7 +28,7 @@ jobs:
           dockerhub_username: ${{ secrets.dockerhub_username }}
           dockerhub_token: ${{ secrets.dockerhub_token }}
           image_name: node-devcontainer
-          image_tag: new-test
+          image_tag: new-test2
           dockerfile_path: src/node.dockerfile
           build_args: |
             BASH_TAG=latest
