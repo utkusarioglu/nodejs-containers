@@ -49,7 +49,7 @@ WORKDIR ${HOME}
 
 USER root
 
-COPY home/scripts/* scripts/
+COPY home/scripts scripts/
 RUN ls -alR ${HOME}
 RUN chown -R 1000:1000 ${HOME}
 
