@@ -49,7 +49,7 @@ COPY home/scripts/* scripts/
 
 USER root
 
-RUN scripts/bootstap/nodejs.sh
+RUN scripts/bootstrap/nodejs.sh
 
 # RUN apt update && apt upgrade && apt install -y nodejs
 
