@@ -6,7 +6,7 @@ bash --version
 apt-get update 
 apt-get upgrade -y
 apt-get install -y software-properties-common 
-curl -sL https://deb.nodesource.com/setup_220.x | sudo -E bash - 
+curl -sL https://deb.nodesource.com/setup_220.x | -E bash - 
 
 apt-get install -y nodejs
 
