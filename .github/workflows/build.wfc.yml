@@ -22,8 +22,8 @@ jobs:
         images:
           - node_version: 23.x
             image_name: node-devcontainer
-            base_image: bash-devcontainer
-            base_tag: test-7
+            base_image: ubuntu-devcontainer
+            base_tag: noble-test-1
             image_tag: ${{ inputs.image_tag }}
             docker_context: src
             dockerfile_path: src/node.dockerfile
