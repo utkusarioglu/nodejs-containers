@@ -15,10 +15,10 @@ jobs:
       fail-fast: false
       matrix:
         images:
-          - node_version: "23"
-            base_tag: latest
+          - node_version: 23.x
             base_image: bash-devcontainer
-            image_tag: 20-slim
+            base_tag: test-1
+            image_tag: test-1
 
     steps:
       - uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
           dockerhub_username: ${{ secrets.dockerhub_username }}
           dockerhub_token: ${{ secrets.dockerhub_token }}
           image_name: node-devcontainer
-          image_tag: new-test2
+          image_tag: ${{ matrix.images.image_tag }}
           dockerfile_path: src/node.dockerfile
           build_args: |
             BASE_TAG=${{ matrix.images.base_tag }}
