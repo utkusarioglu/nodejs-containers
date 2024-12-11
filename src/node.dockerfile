@@ -43,9 +43,13 @@ ARG BASH_TAG
 
 FROM utkusarioglu/bash-devcontainer:${BASH_TAG}
 
+ARG HOME=/home/dev
+
 WORKDIR ${HOME}
 
 COPY home/scripts/* scripts/
+RUN ls -alR ${HOME}
+RUN chown -R 1000:1000 ${HOME}
 
 USER root
 
