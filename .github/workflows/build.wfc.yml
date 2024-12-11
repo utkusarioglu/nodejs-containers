@@ -17,8 +17,8 @@ jobs:
         images:
           - node_version: 23.x
             base_image: bash-devcontainer
-            base_tag: test-1
-            image_tag: test-1
+            base_tag: test-7
+            image_tag: test-7
 
     steps:
       - uses: actions/checkout@v4
