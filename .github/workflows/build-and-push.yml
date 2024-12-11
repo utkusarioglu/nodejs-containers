@@ -1,14 +1,14 @@
 name: build-and-push
 
-on:
-  push:
-    tags:
-      - "**.**"
-      - "experiment/**/**/**"
-    paths:
-      - src/**
-      - .github/workflows/build-and-push.yml
-  workflow_dispatch:
+# on:
+#   push:
+#     tags:
+#       - "**.**"
+#       - "experiment/**/**/**"
+#     paths:
+#       - src/**
+#       - .github/workflows/build-and-push.yml
+#   workflow_dispatch:
 
 env:
   CONTAINER_NAME: node-devcontainer

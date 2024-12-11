@@ -1,0 +1,38 @@
+Name: Build and push
+
+on:
+  workflow_call:
+    secrets:
+      dockerhub_username: 
+        required: true
+      dockerhub_token: 
+        required: true 
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        images:
+          - node_version: 20-slim
+            image_tag: 20-slim
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: utkusarioglu/devcontainer-build@main
+        with:
+          docker_context: src
+          dockerhub_username: ${{ secrets.dockerhub_username }}
+          dockerhub_token: ${{ secrets.dockerhub_token }}
+          image_name: node-devcontainer
+          image_tag: new-test
+          dockerfile_path: src/node.dockerfile
+          build_args: |
+            BASH_TAG=latest
+          devcontainer_subfolder: src
+          devcontainer_run_cmd_path: /home/dev/scripts/bootstrap/devcontainer-node-check.sh
+          dockerhub_repo_short_description: New nodejs test
+          dockerhub_repo_readme_file_path: src/DOCKER_README.md
