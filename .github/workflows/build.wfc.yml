@@ -17,6 +17,7 @@ jobs:
         images:
           - node_version: "23"
             base_tag: latest
+            base_image: bash-devcontainer
             image_tag: 20-slim
 
     steps:
@@ -32,7 +33,8 @@ jobs:
           image_tag: new-test2
           dockerfile_path: src/node.dockerfile
           build_args: |
-            BASE_TAG:${{ matrix.images.base_tag }}
+            BASE_TAG=${{ matrix.images.base_tag }}
+            BASE_IMAGE=${{ matrix.images.base_image }}
             NODE_VERSION=${{ matrix.images.node_version }}
           devcontainer_enabled: "false"
           devcontainer_subfolder: src
