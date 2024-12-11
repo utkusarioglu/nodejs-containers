@@ -44,6 +44,8 @@ ARG BASH_TAG
 FROM utkusarioglu/bash-devcontainer:${BASH_TAG}
 
 ARG HOME=/home/dev
+ARG IMAGE_NAME
+ARG IMAGE_TAG
 
 WORKDIR ${HOME}
 
