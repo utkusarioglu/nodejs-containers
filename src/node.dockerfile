@@ -15,7 +15,9 @@ WORKDIR ${HOME_ABSPATH}
 
 USER root
 
+RUN ls -alR ${HOME_ABSPATH}
 COPY home/scripts scripts/
+RUN ls -alR ${HOME_ABSPATH}
 
 # from base image
 RUN scripts/bootstrap/set-path-permissions.sh \
