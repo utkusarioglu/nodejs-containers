@@ -17,7 +17,7 @@ jobs:
         images:
           - node_version: 20-slim
             image_tag: 20-slim
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
