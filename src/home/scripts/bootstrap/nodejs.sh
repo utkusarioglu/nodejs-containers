@@ -6,7 +6,9 @@ bash --version
 apt-get update 
 apt-get upgrade -y
 apt-get install -y software-properties-common 
-curl -sL https://deb.nodesource.com/setup_220.x | bash - 
+wget -O nodesource_setup.sh https://deb.nodesource.com/setup_23.x
+./nodesource_setup.sh
+# curl -sL https://deb.nodesource.com/setup_220.x | bash - 
 
 apt-get install -y nodejs
 
