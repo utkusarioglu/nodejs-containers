@@ -15,8 +15,6 @@ chmod +x ${node_file}
 apt-get install -y nodejs
 
 node -v 
-node --versionnpm -v
-npm --version
 
 corepack enable yarn 
 yarn set version stable
