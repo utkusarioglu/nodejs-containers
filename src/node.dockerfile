@@ -43,6 +43,8 @@ ARG BASH_TAG
 
 FROM utkusarioglu/bash-devcontainer:${BASH_TAG}
 
+USER root
+
 RUN apt update && apt upgrade && apt install -y nodejs
 
 # Needed for yarn
@@ -70,6 +72,8 @@ RUN yarn set version stable
 # # Elam
 # RUN git clone https://github.com/utkusarioglu/elam.git $ELAM_ABSPATH
 # RUN echo "alias elam=$ELAM_ABSPATH/elam.sh" >> $HOME/.bash_aliases
+
+USER dev
 
 COPY home/scripts .
 
