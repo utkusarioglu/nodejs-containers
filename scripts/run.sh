@@ -1,5 +1,6 @@
-im=utkusarioglu/node-devcontainer:new-test2
+image_tag=${1:?'Image tag needs to be param #1'}
+im=utkusarioglu/node-devcontainer:${image_tag}
 
 docker image rm $im
 docker pull $im
-docker run -it --rm $im 
+docker run -it --rm $im

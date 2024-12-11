@@ -1,7 +1,6 @@
 ARG BASE_IMAGE
 ARG BASE_TAG
 
-# FROM utkusarioglu/bash-devcontainer:${BASE_TAG}
 FROM utkusarioglu/${BASE_IMAGE}:${BASE_TAG}
 
 ARG NODE_VERSION
