@@ -24,6 +24,8 @@ RUN ${BOOTSTAP_ABSPATH}/linux/set-permissions.sh \
 
 RUN ls -alR ${HOME_ABSPATH}
 
+RUN ${BOOTSTAP_ABSPATH}/linux/update-apt.sh
+
 RUN ${BOOTSTAP_ABSPATH}/node/install-apt.sh
 
 RUN ${BOOTSTAP_ABSPATH}/node/install-nodejs.sh ${NODE_VERSION}
