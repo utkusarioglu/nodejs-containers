@@ -34,7 +34,8 @@ jobs:
             devcontainer_run_cmd_path: /home/dev/scripts/bootstrap/node/check-devcontainer.sh
             dockerhub_repo_readme_file_path: src/DOCKER_README.md
             devcontainer_subfolder: src
-            apt_packages: software-properties-common 
+            apt_packages: ""
+            apt_packages_silent: software-properties-common 
 
     steps:
       - uses: actions/checkout@v4
@@ -53,6 +54,7 @@ jobs:
             BASE_IMAGE=${{ matrix.images.base_image }}
             NODE_VERSION=${{ matrix.images.node_version }}
             APT_PACKAGES=${{ matrix.images.apt_packages }}
+            APT_PACKAGES_SILENT=${{ matrix.images.apt_packages_silent }}
           devcontainer_enabled: "false"
           devcontainer_subfolder: ${{ matrix.images.devcontainer_subfolder }}
           devcontainer_run_cmd_path: ${{ matrix.images.devcontainer_run_cmd_path }}
