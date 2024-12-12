@@ -2,4 +2,4 @@
 
 set -eux
 
-apt-get install -y software-properties-common 
+apt-get install -y 
