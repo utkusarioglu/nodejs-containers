@@ -9,21 +9,25 @@ ARG USER_ID=1000
 ARG GROUP_ID=1000
 ARG DEFAULT_USER=dev
 ARG HOME_ABSPATH=/home/${DEFAULT_USER}
+ARG BOOTSTAP_ABSPATH=${HOME_ABSPATH}/scripts/bootstrap
 
 WORKDIR ${HOME_ABSPATH}
 
 USER root
 
-RUN ls -alR ${HOME_ABSPATH}
 COPY home/scripts scripts/
-RUN ls -alR ${HOME_ABSPATH}
 
-# from base image
-RUN scripts/bootstrap/linux/set-permissions.sh \
+RUN ${BOOTSTAP_ABSPATH}/linux/set-permissions.sh \
   ${USER_ID} \
   ${GROUP_ID} \
   ${HOME_ABSPATH}
 
-RUN scripts/bootstrap/linux/install-nodejs.sh ${NODE_VERSION}
+RUN ls -alR ${HOME_ABSPATH}
+
+RUN ${BOOTSTAP_ABSPATH}/node/install-apt.sh
+
+RUN ${BOOTSTAP_ABSPATH}/node/install-nodejs.sh ${NODE_VERSION}
+
+RUN ${BOOTSTAP_ABSPATH}/linux/clean-apt.sh
 
 USER ${DEFAULT_USER}

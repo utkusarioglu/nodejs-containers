@@ -6,13 +6,8 @@ bash --version
 ARGS=(
   node_version
 )
-
-# from base image
 . ${0%/*}/../linux/parse-args.sh
 
-apt-get update 
-apt-get upgrade -y
-apt-get install -y software-properties-common 
 node_file=nodesource_setup.sh
 wget -O ${node_file} https://deb.nodesource.com/setup_${node_version}
 chmod +x ${node_file}
