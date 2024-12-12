@@ -28,11 +28,9 @@ RUN ls -alR ${HOME_ABSPATH}
 
 RUN ${BOOTSTAP_ABSPATH}/linux/update-apt.sh
 
-RUN if [ -n "${APT_PACKAGES_SILENT:-}"] && \
-  ${BOOTSTAP_ABSPATH}/linux/install-apt.sh --no-check "${APT_PACKAGES_SILENT}"
+RUN ${BOOTSTAP_ABSPATH}/linux/install-apt.sh --no-check "${APT_PACKAGES_SILENT}"
 
-RUN if [ -n "${APT_PACKAGES:-}" ] && \
-  ${BOOTSTAP_ABSPATH}/linux/install-apt.sh "${APT_PACKAGES}"
+RUN ${BOOTSTAP_ABSPATH}/linux/install-apt.sh "${APT_PACKAGES}"
 
 RUN ${BOOTSTAP_ABSPATH}/node/install-nodejs.sh ${NODE_VERSION}
 
