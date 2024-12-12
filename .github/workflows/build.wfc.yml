@@ -35,7 +35,7 @@ jobs:
             dockerhub_repo_readme_file_path: src/DOCKER_README.md
             devcontainer_subfolder: src
             apt_packages: ""
-            apt_packages_silent: software-properties-common 
+            apt_packages_silent: ""
 
     steps:
       - uses: actions/checkout@v4
