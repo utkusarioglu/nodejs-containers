@@ -8,7 +8,7 @@ ARGS=(
 )
 
 # from base image
-. ${0%/*}/parse-args.sh
+. ${0%/*}/../linux/parse-args.sh
 
 apt-get update 
 apt-get upgrade -y

@@ -7,6 +7,10 @@ on:
         description: Tag of the final docker image
         type: string
         required: true
+      base_tag:
+        description: Ubuntu base image tag
+        type: string
+        required: true
     secrets:
       dockerhub_username: 
         required: true
@@ -23,7 +27,7 @@ jobs:
           - node_version: 23.x
             image_name: node-devcontainer
             base_image: ubuntu-devcontainer
-            base_tag: noble-test-1
+            base_tag: ${{ inputs.base_tag }}
             image_tag: ${{ inputs.image_tag }}
             docker_context: src
             dockerfile_path: src/node.dockerfile

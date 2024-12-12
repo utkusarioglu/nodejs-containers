@@ -19,11 +19,11 @@ COPY home/scripts scripts/
 RUN ls -alR ${HOME_ABSPATH}
 
 # from base image
-RUN scripts/bootstrap/set-path-permissions.sh \
+RUN scripts/bootstrap/linux/set-permissions.sh \
   ${USER_ID} \
   ${GROUP_ID} \
   ${HOME_ABSPATH}
 
-RUN scripts/bootstrap/install-nodejs.sh ${NODE_VERSION}
+RUN scripts/bootstrap/linux/install-nodejs.sh ${NODE_VERSION}
 
 USER ${DEFAULT_USER}
