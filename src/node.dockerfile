@@ -19,11 +19,6 @@ USER root
 
 COPY home/scripts/ scripts/
 
-RUN ${BOOTSTAP_ABSPATH}/linux/set-permissions.sh \
-  ${USER_ID} \
-  ${GROUP_ID} \
-  ${HOME_ABSPATH}
-
 RUN ls -alR ${HOME_ABSPATH}
 
 RUN ${BOOTSTAP_ABSPATH}/linux/update-apt.sh
@@ -35,5 +30,10 @@ RUN ${BOOTSTAP_ABSPATH}/linux/install-apt.sh "${APT_PACKAGES}"
 RUN ${BOOTSTAP_ABSPATH}/node/install-nodejs.sh ${NODE_VERSION}
 
 RUN ${BOOTSTAP_ABSPATH}/linux/clean-apt.sh
+
+RUN ${BOOTSTAP_ABSPATH}/linux/set-permissions.sh \
+  ${USER_ID} \
+  ${GROUP_ID} \
+  ${HOME_ABSPATH}
 
 USER ${DEFAULT_USER}
