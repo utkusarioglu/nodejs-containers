@@ -6,7 +6,7 @@ bash --version
 ARGS=(
   node_version
 )
-. ${0%/*}/../linux/parse-args.sh
+. /home/dev/scripts/utils/parse-args.sh
 
 node_file=nodesource_setup.sh
 wget -O ${node_file} https://deb.nodesource.com/setup_${node_version}
